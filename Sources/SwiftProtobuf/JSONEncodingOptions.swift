@@ -21,6 +21,7 @@ public struct JSONEncodingOptions {
   /// Whether to preserve proto field names.
   /// By default they are converted to JSON(lowerCamelCase) names.
   public var preserveProtoFieldNames: Bool = false
-
+    
+    public var preserveDefaultValues: Bool = false
   public init() {}
 }

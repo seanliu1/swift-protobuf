@@ -83,56 +83,77 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitSingularFloatField(value: Float, fieldNumber: Int) throws {
+    guard value == 0 && options.preserveDefaultValues else {return}
     try startField(for: fieldNumber)
     encoder.putFloatValue(value: value)
   }
 
   mutating func visitSingularDoubleField(value: Double, fieldNumber: Int) throws {
+    guard value == 0 || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putDoubleValue(value: value)
   }
 
   mutating func visitSingularInt32Field(value: Int32, fieldNumber: Int) throws {
+    guard value == 0 || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putInt32(value: value)
   }
 
   mutating func visitSingularInt64Field(value: Int64, fieldNumber: Int) throws {
+    guard value == 0 || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putInt64(value: value)
   }
 
   mutating func visitSingularUInt32Field(value: UInt32, fieldNumber: Int) throws {
+    guard value == 0 || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putUInt32(value: value)
   }
 
   mutating func visitSingularUInt64Field(value: UInt64, fieldNumber: Int) throws {
+    guard value == 0 || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putUInt64(value: value)
   }
 
   mutating func visitSingularFixed32Field(value: UInt32, fieldNumber: Int) throws {
+    guard value != 0 || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putUInt32(value: value)
   }
 
   mutating func visitSingularSFixed32Field(value: Int32, fieldNumber: Int) throws {
+    guard value != 0 || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putInt32(value: value)
   }
 
   mutating func visitSingularBoolField(value: Bool, fieldNumber: Int) throws {
+    guard value != false || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putBoolValue(value: value)
   }
 
   mutating func visitSingularStringField(value: String, fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putStringValue(value: value)
   }
 
   mutating func visitSingularBytesField(value: Data, fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.putBytesValue(value: value)
   }
@@ -156,6 +177,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitSingularEnumField<E: Enum>(value: E, fieldNumber: Int) throws {
+    guard value.rawValue != 0 || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     if !options.alwaysPrintEnumsAsInts, let n = value.name {
       encoder.appendQuoted(name: n)
@@ -175,6 +198,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedFloatField(value: [Float], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: Float) in
       encoder.putFloatValue(value: v)
@@ -182,6 +207,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedDoubleField(value: [Double], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: Double) in
       encoder.putDoubleValue(value: v)
@@ -189,6 +216,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedInt32Field(value: [Int32], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: Int32) in
       encoder.putInt32(value: v)
@@ -196,6 +225,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedInt64Field(value: [Int64], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: Int64) in
       encoder.putInt64(value: v)
@@ -203,6 +234,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
    mutating func visitRepeatedUInt32Field(value: [UInt32], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: UInt32) in
       encoder.putUInt32(value: v)
@@ -210,6 +243,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedUInt64Field(value: [UInt64], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: UInt64) in
       encoder.putUInt64(value: v)
@@ -217,30 +252,44 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
    mutating func visitRepeatedSInt32Field(value: [Int32], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try visitRepeatedInt32Field(value: value, fieldNumber: fieldNumber)
   }
 
   mutating func visitRepeatedSInt64Field(value: [Int64], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try visitRepeatedInt64Field(value: value, fieldNumber: fieldNumber)
   }
 
   mutating func visitRepeatedFixed32Field(value: [UInt32], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try visitRepeatedUInt32Field(value: value, fieldNumber: fieldNumber)
   }
 
   mutating func visitRepeatedFixed64Field(value: [UInt64], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try visitRepeatedUInt64Field(value: value, fieldNumber: fieldNumber)
   }
 
    mutating func visitRepeatedSFixed32Field(value: [Int32], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try visitRepeatedInt32Field(value: value, fieldNumber: fieldNumber)
   }
 
   mutating func visitRepeatedSFixed64Field(value: [Int64], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try visitRepeatedInt64Field(value: value, fieldNumber: fieldNumber)
   }
 
   mutating func visitRepeatedBoolField(value: [Bool], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: Bool) in
       encoder.putBoolValue(value: v)
@@ -248,6 +297,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedStringField(value: [String], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: String) in
       encoder.putStringValue(value: v)
@@ -255,6 +306,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedBytesField(value: [Data], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: Data) in
       encoder.putBytesValue(value: v)
@@ -262,6 +315,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedEnumField<E: Enum>(value: [E], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     let alwaysPrintEnumsAsInts = options.alwaysPrintEnumsAsInts
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: E) throws in
@@ -274,6 +329,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitRepeatedMessageField<M: Message>(value: [M], fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     let localOptions = options
     try _visitRepeated(value: value, fieldNumber: fieldNumber) {
       (encoder: inout JSONEncoder, v: M) throws in
@@ -292,6 +349,8 @@ internal struct JSONEncodingVisitor: Visitor {
 
 
   mutating func visitMapField<KeyType, ValueType: MapValueType>(fieldType: _ProtobufMap<KeyType, ValueType>.Type, value: _ProtobufMap<KeyType, ValueType>.BaseType, fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.append(text: "{")
     var mapVisitor = JSONMapEncodingVisitor(encoder: encoder, options: options)
@@ -304,6 +363,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitMapField<KeyType, ValueType>(fieldType: _ProtobufEnumMap<KeyType, ValueType>.Type, value: _ProtobufEnumMap<KeyType, ValueType>.BaseType, fieldNumber: Int) throws  where ValueType.RawValue == Int {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.append(text: "{")
     var mapVisitor = JSONMapEncodingVisitor(encoder: encoder, options: options)
@@ -316,6 +377,8 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitMapField<KeyType, ValueType>(fieldType: _ProtobufMessageMap<KeyType, ValueType>.Type, value: _ProtobufMessageMap<KeyType, ValueType>.BaseType, fieldNumber: Int) throws {
+    guard !value.isEmpty || options.preserveDefaultValues else {return}
+
     try startField(for: fieldNumber)
     encoder.append(text: "{")
     var mapVisitor = JSONMapEncodingVisitor(encoder: encoder, options: options)
