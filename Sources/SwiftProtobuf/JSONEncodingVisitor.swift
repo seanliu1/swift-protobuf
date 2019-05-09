@@ -83,41 +83,41 @@ internal struct JSONEncodingVisitor: Visitor {
   }
 
   mutating func visitSingularFloatField(value: Float, fieldNumber: Int) throws {
-    guard value == 0 && options.preserveDefaultValues else {return}
+    guard value != 0 || options.preserveDefaultValues else {return}
     try startField(for: fieldNumber)
     encoder.putFloatValue(value: value)
   }
 
   mutating func visitSingularDoubleField(value: Double, fieldNumber: Int) throws {
-    guard value == 0 || options.preserveDefaultValues else {return}
+    guard value != 0 || options.preserveDefaultValues else {return}
 
     try startField(for: fieldNumber)
     encoder.putDoubleValue(value: value)
   }
 
   mutating func visitSingularInt32Field(value: Int32, fieldNumber: Int) throws {
-    guard value == 0 || options.preserveDefaultValues else {return}
+    guard value != 0 || options.preserveDefaultValues else {return}
 
     try startField(for: fieldNumber)
     encoder.putInt32(value: value)
   }
 
   mutating func visitSingularInt64Field(value: Int64, fieldNumber: Int) throws {
-    guard value == 0 || options.preserveDefaultValues else {return}
+    guard value != 0 || options.preserveDefaultValues else {return}
 
     try startField(for: fieldNumber)
     encoder.putInt64(value: value)
   }
 
   mutating func visitSingularUInt32Field(value: UInt32, fieldNumber: Int) throws {
-    guard value == 0 || options.preserveDefaultValues else {return}
+    guard value != 0 || options.preserveDefaultValues else {return}
 
     try startField(for: fieldNumber)
     encoder.putUInt32(value: value)
   }
 
   mutating func visitSingularUInt64Field(value: UInt64, fieldNumber: Int) throws {
-    guard value == 0 || options.preserveDefaultValues else {return}
+    guard value != 0 || options.preserveDefaultValues else {return}
 
     try startField(for: fieldNumber)
     encoder.putUInt64(value: value)
